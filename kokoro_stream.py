@@ -21,11 +21,19 @@ def stream_kokoro():
     
     generator = pipeline(text=text, voice=voice, speed=1)
     
+    audio_chunks = []
     for i, (gs, ps, audio) in enumerate(generator):
-        print(f'Playing chunk {i + 1}... {gs} {ps}')
-        # Convert tensor to numpy array first, then to 16-bit PCM
+        print(f'Processando chunk {i + 1}... {gs} {ps}')
+        # Convert tensor to numpy array first
         audio_numpy = audio.numpy() if hasattr(audio, 'numpy') else audio.cpu().numpy()
-        audio_int16 = (audio_numpy * 32767).astype(np.int16)
+        audio_chunks.append(audio_numpy)
+    
+    if audio_chunks:
+        # Concatenate all audio chunks
+        audio_completo = np.concatenate(audio_chunks)
+        # Convert to 16-bit PCM for simpleaudio
+        audio_int16 = (audio_completo * 32767).astype(np.int16)
+        print(f"Reproduzindo áudio completo: {len(audio_completo)} samples")
         play_obj = sa.play_buffer(audio_int16, 1, 2, 24000)
         play_obj.wait_done()
     
