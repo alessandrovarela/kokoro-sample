@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "kokoro>=0.9.4",
+    "pygame>=2.6.1",
     "simpleaudio>=1.0.4",
     "soundfile>=0.13.1",
 ]
